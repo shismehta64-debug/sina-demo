@@ -1,0 +1,133 @@
+/* ═══════════════════════════════════════════════════════════════
+   typography.css — HUD type system
+   Display = Space Grotesk, wide-tracked caps. UI = IBM Plex Mono.
+   ═══════════════════════════════════════════════════════════════ */
+
+.display {
+  font-family: 'Space Grotesk', 'Helvetica Neue', sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+}
+
+.mono {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-weight: 400;
+}
+
+.display.xl { font-size: clamp(3.4rem, 12vw, 11rem); letter-spacing: 0.02em; }
+.display.lg { font-size: clamp(2.4rem, 7vw, 6rem);   letter-spacing: 0.01em; }
+.display.md { font-size: clamp(1.7rem, 3.6vw, 3.2rem); letter-spacing: 0.03em; }
+.display.center { text-align: center; }
+
+.dim   { color: var(--dim); }
+.accent{ color: var(--teal); }
+
+/* the signature glow — used sparingly, on the payoff line only */
+.mline.accent,
+.display .accent {
+  color: var(--teal);
+  text-shadow: 0 0 40px rgba(10, 245, 200, 0.55), 0 0 90px rgba(10, 245, 200, 0.18);
+}
+
+.label {
+  font-size: 10px;
+  letter-spacing: 0.34em;
+  color: rgba(232, 244, 248, 0.5);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--white);
+  padding: 8px 16px 8px 14px;
+  border: 1px solid var(--line);
+  background: rgba(7, 21, 32, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  margin-bottom: 26px;
+  align-self: flex-start;
+}
+
+/* per-character reveal rig (built by JS) */
+.char {
+  display: inline-block;
+  will-change: transform, opacity;
+  transform-origin: 50% 100%;
+}
+.char.space { width: 0.32em; }
+
+/* line-by-line reveal rig */
+.mline {
+  display: block;
+  overflow: hidden;
+}
+.mline > .mline-in { display: block; }
+
+/* elements that fade up on scroll-in */
+.reveal-up { will-change: transform, opacity; }
+
+/* text that is mid-scramble */
+[data-glitch].scrambling {
+  color: var(--teal);
+  text-shadow: 0 0 24px rgba(10, 245, 200, 0.4);
+}
+
+/* chromatic text ghosting for the loudest headings */
+.display.xl {
+  text-shadow:
+    0.012em 0 rgba(26, 108, 255, 0.28),
+   -0.012em 0 rgba(10, 245, 200, 0.22);
+}
+
+::placeholder { color: rgba(74, 106, 122, 0.65); letter-spacing: 0.12em; }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   Legibility over a live 3D world.
+
+   Every section floats on top of particles that can be anywhere from
+   near-black to a lit reactor core, so copy cannot rely on the background
+   staying dark. Text carries its own shadow, and the densest blocks carry a
+   soft scrim that fades out at its edges rather than drawing a box.
+   ═══════════════════════════════════════════════════════════════ */
+
+.sec .display,
+.sec .mono,
+.sec p,
+.sec li,
+.sec blockquote,
+.sec .label {
+  text-shadow: 0 1px 18px rgba(2, 8, 12, 0.92), 0 0 4px rgba(2, 8, 12, 0.6);
+}
+
+.scrim {
+  position: relative;
+  isolation: isolate;
+}
+
+.lab-r.scrim::before { display: none; }
+
+.scrim::before {
+  content: '';
+  position: absolute;
+  inset: -6% -5%;
+  z-index: -1;
+  background: radial-gradient(ellipse at 50% 50%, rgba(3, 9, 14, 0.86) 0%, rgba(3, 9, 14, 0.62) 45%, rgba(3, 9, 14, 0) 78%);
+  pointer-events: none;
+}
+
+/* the loudest headings keep their chromatic ghost *and* the world scrim */
+.sec .display.xl,
+.display.xl {
+  text-shadow:
+     0.012em 0 rgba(26, 108, 255, 0.30),
+    -0.012em 0 rgba(10, 245, 200, 0.24),
+     0 1px 24px rgba(2, 8, 12, 0.95);
+}

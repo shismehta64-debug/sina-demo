@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#040a0f" />
+<title>SINA AI — The AI Model That Thinks Beyond</title>
+<meta name="description" content="SINA AI builds models that don't just answer — they understand. Real-time inference, 128k context, 200 tok/s." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ═══════════ SECTION 0 — PRELOADER ═══════════ -->
+<div id="preloader" aria-hidden="true">
+  <div class="pre-inner">
+    <svg id="pre-mark" viewBox="-1 -1 2 2" width="240" height="240"></svg>
+    <div class="pre-readout">
+      <div class="pre-line"><span id="pre-status">INITIALIZING NEURAL CORE</span><span class="pre-dots">...</span></div>
+      <div class="pre-bar"><i id="pre-fill"></i></div>
+      <div class="pre-meta">
+        <span id="pre-pct">000</span><span>%</span>
+        <span class="pre-sep">/</span>
+        <span id="pre-log">COLD START</span>
+      </div>
+    </div>
+  </div>
+  <div class="pre-corner tl"></div><div class="pre-corner tr"></div>
+  <div class="pre-corner bl"></div><div class="pre-corner br"></div>
+</div>
+
+<!-- ═══════════ PERSISTENT WEBGL WORLD ═══════════ -->
+<canvas id="bg-canvas"></canvas>
+<div id="grain" aria-hidden="true"></div>
+<div id="scanlines" aria-hidden="true"></div>
+
+<!-- ═══════════ CURSOR ═══════════ -->
+<div id="cursor-ring" aria-hidden="true"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="20"/></svg><b id="cursor-label"></b></div>
+<div id="cursor-dot" aria-hidden="true"></div>
+
+<!-- ═══════════ CHROME / HUD ═══════════ -->
+<header id="nav">
+  <a class="nav-mark" href="#hero" data-cursor="HOME">
+    <svg viewBox="-1 -1 2 2" width="30" height="30" id="nav-mark-svg"></svg>
+    <span>SINA&nbsp;<i>AI</i></span>
+  </a>
+  <nav class="nav-links">
+    <a href="#capabilities" class="glitch-link" data-text="WORK">WORK</a>
+    <span class="nav-rule"></span>
+    <a href="#contact" class="glitch-link" data-text="CONTACT">CONTACT</a>
+  </nav>
+</header>
+
+<aside id="hud" aria-hidden="true">
+  <div class="hud-block">
+    <div class="hud-row"><span>SECTOR</span><b id="hud-sector">00 / HERO</b></div>
+    <div class="hud-row"><span>CAM</span><b id="hud-cam">0.0 0.0 0.0</b></div>
+    <div class="hud-row"><span>FIELD</span><b id="hud-parts">—</b></div>
+    <div class="hud-row"><span>FPS</span><b id="hud-fps">—</b></div>
+    <div class="hud-row"><span>TIER</span><b id="hud-tier">—</b></div>
+  </div>
+</aside>
+
+<div id="progress" aria-hidden="true">
+  <div class="prog-track"><i id="prog-fill"></i><b id="prog-dot"></b></div>
+  <span class="prog-label" id="prog-pct">00</span>
+</div>
+
+<div id="hint" aria-hidden="true"><span>SCROLL</span><i></i></div>
+
+<!-- ═══════════ SCROLL WORLD ═══════════ -->
+<main id="scroll-container">
+
+  <!-- ─── 1 · HERO ─── -->
+  <section class="sec" id="hero" data-sector="00 / HERO">
+    <div class="hero-wrap">
+      <div class="eyebrow reveal-up"><i class="pip live"></i>NEURAL CORE v4.2 · ONLINE</div>
+      <h1 class="display xl" id="hero-title">SINA AI</h1>
+      <div class="hero-tag mono" id="hero-tag">CREATIVE &nbsp;·&nbsp; INTELLIGENT &nbsp;·&nbsp; LIMITLESS</div>
+      <p class="hero-sub reveal-up">THE AI MODEL THAT THINKS BEYOND</p>
+      <div class="hero-cta reveal-up">
+        <a href="#api" class="btn" data-cursor="OPEN"><span>EXPLORE THE API</span><i>→</i></a>
+        <a href="#models" class="btn ghost" data-cursor="VIEW"><span>VIEW MODELS</span><i>→</i></a>
+      </div>
+    </div>
+    <div class="hero-foot mono">
+      <span>[ MOVE CURSOR — THE FIELD RESPONDS ]</span>
+      <span class="live-tag"><i class="pip live"></i>7B PARAMS ACTIVE</span>
+    </div>
+  </section>
+
+  <!-- ─── 2 · MANIFESTO ─── -->
+  <section class="sec" id="about" data-sector="01 / MANIFESTO">
+    <div class="about-wrap scrim">
+      <div class="label mono reveal-up">FOUNDED IN 2024</div>
+      <h2 class="display manifesto">
+        <span class="mline" data-glitch>WE BUILD AI MODELS</span>
+        <span class="mline" data-glitch>THAT DO NOT JUST ANSWER.</span>
+        <span class="mline accent" data-glitch>THEY UNDERSTAND.</span>
+      </h2>
+      <p class="manifesto-body mono reveal-up">
+        OUR INDUSTRY-LEADING INFERENCE PIPELINE CONSISTENTLY DELIVERS
+        REAL-TIME INTELLIGENCE THROUGH QUALITY &amp; PERFORMANCE.
+      </p>
+      <div class="about-grid mono">
+        <div class="ag reveal-up"><b>2024</b><span>FOUNDED</span></div>
+        <div class="ag reveal-up"><b>6</b><span>MODELS SHIPPED</span></div>
+        <div class="ag reveal-up"><b>128K</b><span>CONTEXT</span></div>
+        <div class="ag reveal-up"><b>∞</b><span>AMBITION</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 3 · CAPABILITIES ─── -->
+  <section class="sec" id="capabilities" data-sector="02 / CAPABILITIES">
+    <div class="cap-head scrim">
+      <h2 class="display lg" data-glitch>CAPABILITIES</h2>
+      <div class="filters mono">
+        <span class="f-label">WHAT ARE YOU LOOKING FOR?</span>
+        <div class="f-row">
+          <button class="filt active" data-filter="all">→ ALL</button>
+          <button class="filt" data-filter="language">→ LANGUAGE MODELS</button>
+          <button class="filt" data-filter="vision">→ VISION MODELS</button>
+          <button class="filt" data-filter="embed">→ EMBEDDINGS</button>
+          <button class="filt" data-filter="realtime">→ REAL-TIME API</button>
+          <button class="filt" data-filter="tune">→ FINE-TUNING</button>
+        </div>
+      </div>
+    </div>
+    <div class="cap-grid" id="cap-grid"></div>
+  </section>
+
+  <!-- ─── 4 · REACTOR ─── -->
+  <section class="sec" id="reactor" data-sector="03 / REACTOR">
+    <div class="reactor-panel">
+      <div class="rp-head">
+        <h2 class="display md" data-glitch>SINA REACTOR</h2>
+        <div class="mono dim">NEURAL CORE v4.2</div>
+      </div>
+      <div class="rp-stats mono">
+        <div class="rs"><span>ACTIVE PARAMETERS</span><b data-count="7000000000" data-format="int">0</b></div>
+        <div class="rs"><span>INFERENCE SPEED</span><b data-count="200" data-suffix=" TOK/SEC">0</b></div>
+        <div class="rs"><span>CONTEXT WINDOW</span><b data-count="128000" data-format="int" data-suffix=" TOKENS">0</b></div>
+        <div class="rs"><span>UPTIME</span><b data-count="99.97" data-dec="2" data-suffix="%">0</b></div>
+      </div>
+      <div class="rp-state mono"><i class="pip live"></i>ACTIVE — CONTAINMENT NOMINAL</div>
+      <div class="rp-ctrl mono">
+        <span>CORE OUTPUT</span>
+        <input type="range" id="core-power" min="0" max="100" value="55" data-cursor="DRAG" />
+        <b id="core-power-val">55%</b>
+      </div>
+    </div>
+    <div class="reactor-readout mono" id="reactor-readout" aria-hidden="true"></div>
+  </section>
+
+  <!-- ─── 5 · API ─── -->
+  <section class="sec" id="api" data-sector="04 / INTERFACE">
+    <div class="api-wrap">
+      <div class="api-left">
+        <div class="term">
+          <div class="term-bar"><i class="d r"></i><i class="d y"></i><i class="d g"></i><span class="mono">SINA API</span><b class="mono">node</b></div>
+          <div class="term-body"><pre id="code-block" class="mono"></pre></div>
+        </div>
+      </div>
+      <div class="api-right">
+        <div class="resp">
+          <div class="resp-head mono"><span>RESPONSE STREAM</span><i class="pip live"></i></div>
+          <div class="resp-body mono" id="resp-body"></div>
+          <div class="resp-badges mono">
+            <span class="badge">⚡<b id="b-lat">12</b>MS</span>
+            <span class="badge">↯<b id="b-tps">198</b> TOK/S</span>
+            <span class="badge accent">SINA-CORE-7B</span>
+          </div>
+          <div class="resp-prompts mono">
+            <span class="rp-label">TRY A PROMPT →</span>
+            <button class="pbtn" data-prompt="0">QUANTUM ENTANGLEMENT</button>
+            <button class="pbtn" data-prompt="1">WRITE A HAIKU</button>
+            <button class="pbtn" data-prompt="2">DEBUG MY REGEX</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 6 · PRICING ─── -->
+  <section class="sec" id="pricing" data-sector="05 / ACCESS">
+    <h2 class="display lg center scrim" data-glitch>ACCESS TIERS</h2>
+    <div class="price-row">
+      <article class="plan glass" data-tilt="-8">
+        <header><h3 class="mono">STARTER</h3><div class="price display">FREE</div></header>
+        <ul class="mono">
+          <li>10K TOKENS / DAY</li><li>API ACCESS</li><li>1 MODEL</li><li>COMMUNITY SUPPORT</li>
+        </ul>
+        <a href="#contact" class="btn sm" data-cursor="GO"><span>GET STARTED</span><i>→</i></a>
+      </article>
+      <article class="plan glass featured" data-tilt="0">
+        <div class="pop mono">MOST POPULAR</div>
+        <header><h3 class="mono">PROFESSIONAL</h3><div class="price display">$49<i>/MO</i></div></header>
+        <ul class="mono">
+          <li>5M TOKENS / MO</li><li>PRIORITY INFERENCE</li><li>ALL MODELS</li><li>EMAIL SUPPORT</li>
+        </ul>
+        <a href="#contact" class="btn sm solid" data-cursor="GO"><span>START FREE TRIAL</span><i>→</i></a>
+      </article>
+      <article class="plan glass" data-tilt="8">
+        <header><h3 class="mono">ENTERPRISE</h3><div class="price display">CUSTOM</div></header>
+        <ul class="mono">
+          <li>UNLIMITED TOKENS</li><li>DEDICATED CLUSTER</li><li>FINE-TUNING INCLUDED</li><li>SLA + DEDICATED SUPPORT</li>
+        </ul>
+        <a href="#contact" class="btn sm" data-cursor="GO"><span>CONTACT US</span><i>→</i></a>
+      </article>
+    </div>
+  </section>
+
+  <!-- ─── 7 · MODELS (horizontal) ─── -->
+  <section class="sec flat" id="models" data-sector="06 / MODELS">
+    <div class="h-pin" id="h-pin">
+      <div class="h-track" id="h-track">
+        <div class="h-panel h-intro">
+          <div class="label mono">DEEP DIVE</div>
+          <h2 class="display lg" data-glitch>THE MODEL FAMILY</h2>
+          <p class="mono dim">FIVE ARCHITECTURES. ONE CORE.<br/>KEEP SCROLLING TO TRAVERSE →</p>
+        </div>
+      </div>
+      <div class="h-rail"><i id="h-rail-fill"></i></div>
+    </div>
+  </section>
+
+  <!-- ─── 8 · THE LAB ─── -->
+  <section class="sec" id="lab" data-sector="07 / THE LAB">
+    <div class="lab-wrap">
+      <div class="lab-l">
+        <div class="mono lab-slash">// THE</div>
+        <h2 class="display xl lab-title" data-glitch>LAB<i>→</i></h2>
+      </div>
+      <div class="lab-r mono scrim">
+        <p class="lab-lead">OUR HOME FOR INNOVATION<br/>WHERE PROTOTYPES TURN INTO<br/>PRODUCTION PROJECTS</p>
+        <a href="#contact" class="btn sm" data-cursor="ENTER"><span>EXPLORE EXPERIMENTAL MODELS</span><i>→</i></a>
+        <ul class="lab-list">
+          <li><b>SINA-DREAM</b><span>LATENT VIDEO SYNTHESIS</span><i>ALPHA</i></li>
+          <li><b>SINA-AGENT</b><span>AUTONOMOUS TOOL USE</span><i>BETA</i></li>
+          <li><b>SINA-VOICE</b><span>REAL-TIME SPEECH DUPLEX</span><i>RESEARCH</i></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 9 · PROOF ─── -->
+  <section class="sec" id="proof" data-sector="08 / PROOF">
+    <div class="stats mono">
+      <div class="st"><b data-count="10" data-suffix="M+">0</b><span>TOKENS / DAY</span></div>
+      <div class="st"><b data-count="99.97" data-dec="2" data-suffix="%">0</b><span>UPTIME</span></div>
+      <div class="st"><b data-prefix="&lt;" data-count="12" data-suffix="MS">0</b><span>LATENCY</span></div>
+      <div class="st"><b data-count="50" data-suffix="+">0</b><span>ENTERPRISE CLIENTS</span></div>
+    </div>
+    <div class="quotes">
+      <figure class="glass q"><blockquote>“SINA's API cut our inference costs by 60% overnight.”</blockquote><figcaption class="mono">— CTO, TECHCORP INDIA</figcaption></figure>
+      <figure class="glass q"><blockquote>“The context window + speed combo is unmatched.”</blockquote><figcaption class="mono">— LEAD ENGINEER, DATAFLOW SYSTEMS</figcaption></figure>
+      <figure class="glass q"><blockquote>“Fine-tuning was live in under 4 hours. Unreal.”</blockquote><figcaption class="mono">— ML LEAD, NEURALSTACK</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- ─── 10 · CONTACT ─── -->
+  <section class="sec" id="contact" data-sector="09 / TRANSMIT">
+    <div class="contact-wrap">
+      <div class="c-left scrim">
+        <h2 class="display xl">
+          <span class="mline" data-glitch>LET US BUILD</span>
+          <span class="mline" data-glitch>SOMETHING</span>
+          <span class="mline accent" data-glitch>IMPOSSIBLE.</span>
+        </h2>
+        <div class="c-links mono">
+          <a href="mailto:hello@sina-ai.com" data-cursor="MAIL">hello@sina-ai.com</a>
+          <a href="#api" data-cursor="DOCS">api.sina-ai.com/docs</a>
+        </div>
+      </div>
+      <div class="c-right">
+        <form class="cform mono" id="cform" novalidate>
+          <label class="cf-line">
+            <span class="cf-q">&gt; ENTER YOUR EMAIL:</span>
+            <input type="email" name="email" required autocomplete="off" spellcheck="false" placeholder="you@company.com" data-cursor="TYPE" />
+          </label>
+          <label class="cf-line">
+            <span class="cf-q">&gt; DESCRIBE YOUR USE CASE:</span>
+            <textarea name="usecase" rows="3" required spellcheck="false" placeholder="we want to..." data-cursor="TYPE"></textarea>
+          </label>
+          <button type="submit" class="btn sm solid" data-cursor="SEND"><span>SEND MESSAGE</span><i>→</i></button>
+          <output class="cf-out" id="cf-out"></output>
+        </form>
+      </div>
+    </div>
+    <footer id="footer" class="mono">
+      <span>SINA AI © 2024</span>
+      <nav><a href="#" class="glitch-link" data-text="PRIVACY">PRIVACY</a><a href="#" class="glitch-link" data-text="TERMS">TERMS</a><a href="#" class="glitch-link" data-text="DOCS">DOCS</a><a href="#" class="glitch-link" data-text="GITHUB">GITHUB</a></nav>
+      <span class="foot-hint">PRESS <b>~</b> FOR CONSOLE</span>
+    </footer>
+  </section>
+
+</main>
+
+<!-- ═══════════ DEV CONSOLE (easter egg) ═══════════ -->
+<div id="console" aria-hidden="true">
+  <div class="con-head mono"><span>SINA://SYSTEM-SHELL</span><b>ESC TO CLOSE</b></div>
+  <div class="con-log mono" id="con-log"></div>
+  <div class="con-in mono"><span>&gt;</span><input id="con-input" autocomplete="off" spellcheck="false" /></div>
+</div>
+
+<div id="rotate-note" class="mono" aria-hidden="true">↻ ROTATE FOR THE FULL EXPERIENCE</div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

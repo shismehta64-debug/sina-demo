@@ -1,0 +1,457 @@
+/* ═══════════════════════════════════════════════════════════════
+   base.css — tokens, reset, world layering, chrome
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --bg:        #040a0f;
+  --bg-2:      #061019;
+  --surface:   #071520;
+  --teal:      #0af5c8;
+  --cyan:      #23c9d9;
+  --blue:      #1a6cff;
+  --violet:    #8b5cf6;
+  --amber:     #f59e0b;
+  --white:     #e8f4f8;
+  --dim:       #4a6a7a;
+  --line:      rgba(10, 245, 200, 0.15);
+  --line-soft: rgba(10, 245, 200, 0.07);
+
+  --glass:     rgba(6, 18, 27, 0.86);
+  --glass-hi:  rgba(10, 30, 45, 0.92);
+
+  --ease:      cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-io:   cubic-bezier(0.65, 0, 0.35, 1);
+
+  --gut:       clamp(20px, 5vw, 88px);
+  --nav-h:     84px;
+
+  --z-canvas:  0;
+  --z-grain:   4;
+  --z-content: 10;
+  --z-chrome:  40;
+  --z-cursor:  90;
+  --z-pre:     100;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: auto; /* Lenis owns scrolling */
+}
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  overflow-x: hidden;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body.is-loading { overflow: hidden; height: 100vh; }
+body.no-scroll  { overflow: hidden; }
+
+::selection { background: var(--teal); color: #021016; }
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+input, textarea { font: inherit; color: inherit; background: none; border: 0; outline: none; }
+ul { list-style: none; }
+img, svg { display: block; max-width: 100%; }
+
+/* ── the persistent world ─────────────────────────────────────── */
+
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: var(--z-canvas);
+  display: block;
+  background: var(--bg);
+  pointer-events: none;
+}
+
+/* film grain — animated via background-position steps */
+#grain {
+  position: fixed;
+  inset: -50%;
+  z-index: var(--z-grain);
+  pointer-events: none;
+  opacity: 0.022;
+  background-image: var(--grain-src);
+  background-size: 180px 180px;
+  will-change: transform;
+  animation: grain-shift 0.7s steps(1) infinite;
+  mix-blend-mode: screen;
+}
+@keyframes grain-shift {
+  0%   { transform: translate(0, 0); }
+  20%  { transform: translate(-3%, 2%); }
+  40%  { transform: translate(2%, -4%); }
+  60%  { transform: translate(-2%, -2%); }
+  80%  { transform: translate(3%, 3%); }
+  100% { transform: translate(0, 0); }
+}
+
+#scanlines {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-grain);
+  pointer-events: none;
+  opacity: 0.10;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.22) 3px,
+    rgba(0, 0, 0, 0) 4px
+  );
+}
+
+/* ── scroll world ─────────────────────────────────────────────── */
+
+#scroll-container {
+  position: relative;
+  z-index: var(--z-content);
+}
+
+.sec {
+  position: relative;
+  /* Entrance tweens park elements off-axis before they play (the pricing cards
+     start ±180px out), which grows the document and lets phones pan sideways.
+     `clip` contains that on one axis without creating a scroll container —
+     `hidden` here would break the pinned section's sticky behaviour. */
+  overflow-x: clip;
+  min-height: 100vh;
+  /* bottom clearance keeps copy out from under the fixed telemetry chip */
+  padding: calc(var(--nav-h) + 24px) var(--gut) 132px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.sec.flat { display: block; padding: 0; overflow-x: visible; }
+
+/* ── nav ──────────────────────────────────────────────────────── */
+
+#nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  z-index: var(--z-chrome);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--gut);
+  mix-blend-mode: normal;
+  pointer-events: none;
+}
+#nav > * { pointer-events: auto; }
+
+.nav-mark {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  letter-spacing: 0.22em;
+  font-size: 13px;
+  font-weight: 500;
+}
+.nav-mark svg { filter: drop-shadow(0 0 8px rgba(10, 245, 200, 0.45)); }
+.nav-mark span { color: var(--white); }
+.nav-mark i { color: var(--teal); font-style: normal; }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 11px;
+  letter-spacing: 0.26em;
+}
+.nav-rule {
+  width: clamp(40px, 8vw, 120px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line), transparent);
+}
+.glitch-link {
+  position: relative;
+  padding: 6px 2px;
+  color: var(--white);
+  transition: color 0.3s var(--ease);
+}
+.glitch-link::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 0; height: 1px;
+  background: var(--teal);
+  box-shadow: 0 0 10px var(--teal);
+  transition: width 0.45s var(--ease);
+}
+.glitch-link:hover { color: var(--teal); }
+.glitch-link:hover::after { width: 100%; }
+
+/* ── HUD telemetry rail ───────────────────────────────────────── */
+
+#hud {
+  position: fixed;
+  left: var(--gut);
+  bottom: 22px;
+  z-index: var(--z-chrome);
+  font-size: 8.5px;
+  letter-spacing: 0.18em;
+  color: var(--dim);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(12px);
+}
+#hud .hud-block { opacity: 0.82; }
+.hud-block {
+  border-left: 1px solid var(--line);
+  padding: 10px 14px 10px 12px;
+  display: grid;
+  gap: 3px;
+  /* the world behind this can be anything from void to a lit reactor */
+  background: linear-gradient(90deg, rgba(4, 10, 15, 0.82), rgba(4, 10, 15, 0.35));
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.hud-row { display: flex; gap: 10px; }
+.hud-row span { min-width: 62px; }
+.hud-row b { color: var(--teal); font-weight: 400; opacity: 0.9; }
+
+/* ── scroll progress rail ─────────────────────────────────────── */
+
+#progress {
+  position: fixed;
+  right: 26px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: var(--z-chrome);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+  opacity: 0;
+}
+.prog-track {
+  position: relative;
+  width: 1px;
+  height: 34vh;
+  background: rgba(232, 244, 248, 0.12);
+  overflow: visible;
+}
+.prog-track i {
+  position: absolute;
+  top: 0; left: 0;
+  width: 1px;
+  height: 0%;
+  background: linear-gradient(180deg, var(--teal), var(--blue));
+  box-shadow: 0 0 8px rgba(10, 245, 200, 0.7);
+}
+.prog-track b {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 5px; height: 5px;
+  margin-left: -2.5px; margin-top: -2.5px;
+  border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 12px var(--teal), 0 0 24px rgba(10, 245, 200, 0.4);
+}
+.prog-label {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--dim);
+}
+
+/* ── scroll hint ──────────────────────────────────────────────── */
+
+#hint {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-chrome);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  color: var(--dim);
+  pointer-events: none;
+  opacity: 0;
+}
+#hint i {
+  width: 1px; height: 40px;
+  background: linear-gradient(180deg, var(--teal), transparent);
+  animation: hint-run 2.2s var(--ease-io) infinite;
+  transform-origin: top;
+}
+@keyframes hint-run {
+  0%   { transform: scaleY(0); opacity: 0; }
+  40%  { transform: scaleY(1); opacity: 1; }
+  100% { transform: scaleY(1) translateY(40px); opacity: 0; }
+}
+
+/* ── custom cursor ────────────────────────────────────────────── */
+
+#cursor-ring, #cursor-dot {
+  position: fixed;
+  top: 0; left: 0;
+  z-index: var(--z-cursor);
+  pointer-events: none;
+  will-change: transform;
+  opacity: 0;
+}
+#cursor-ring {
+  width: 44px; height: 44px;
+  margin: -22px 0 0 -22px;
+  display: grid;
+  place-items: center;
+}
+#cursor-ring svg { width: 100%; height: 100%; overflow: visible; }
+#cursor-ring circle {
+  fill: rgba(10, 245, 200, 0);
+  stroke: var(--teal);
+  stroke-width: 1.2;
+  transition: fill 0.3s var(--ease), stroke-width 0.3s var(--ease);
+  vector-effect: non-scaling-stroke;
+}
+#cursor-ring b {
+  position: absolute;
+  font-size: 8px;
+  letter-spacing: 0.18em;
+  color: var(--teal);
+  font-weight: 400;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+  white-space: nowrap;
+}
+#cursor-ring.hot circle { fill: rgba(10, 245, 200, 0.14); stroke-width: 1; }
+#cursor-ring.hot b { opacity: 1; transform: scale(1); }
+#cursor-dot {
+  width: 4px; height: 4px;
+  margin: -2px 0 0 -2px;
+  border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 8px var(--teal);
+}
+@media (hover: none), (pointer: coarse) {
+  #cursor-ring, #cursor-dot { display: none; }
+}
+
+/* ── preloader ────────────────────────────────────────────────── */
+
+#preloader {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-pre);
+  background: var(--bg);
+  display: grid;
+  place-items: center;
+}
+.pre-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 34px;
+}
+#pre-mark { overflow: visible; filter: drop-shadow(0 0 18px rgba(10, 245, 200, 0.35)); }
+#pre-mark [data-kind] { opacity: 0; }
+
+.pre-readout {
+  width: min(78vw, 380px);
+  display: grid;
+  gap: 12px;
+  opacity: 0;
+}
+.pre-line {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--white);
+}
+.pre-dots { color: var(--teal); animation: blink 1s steps(1) infinite; }
+.pre-bar {
+  position: relative;
+  height: 1px;
+  background: rgba(232, 244, 248, 0.12);
+}
+.pre-bar i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0%;
+  background: var(--teal);
+  box-shadow: 0 0 12px var(--teal);
+}
+.pre-meta {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  color: var(--dim);
+}
+.pre-meta #pre-pct { color: var(--teal); }
+.pre-sep { opacity: 0.4; }
+
+.pre-corner {
+  position: absolute;
+  width: 26px; height: 26px;
+  border: 1px solid var(--line);
+  opacity: 0.6;
+}
+.pre-corner.tl { top: 26px; left: 26px; border-right: 0; border-bottom: 0; }
+.pre-corner.tr { top: 26px; right: 26px; border-left: 0; border-bottom: 0; }
+.pre-corner.bl { bottom: 26px; left: 26px; border-right: 0; border-top: 0; }
+.pre-corner.br { bottom: 26px; right: 26px; border-left: 0; border-top: 0; }
+
+@keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+
+.pip {
+  display: inline-block;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 8px var(--teal);
+  margin-right: 8px;
+  flex: none;
+}
+.pip.live { animation: pip-pulse 1.6s var(--ease-io) infinite; }
+@keyframes pip-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.35; transform: scale(0.7); }
+}
+
+/* ── rotate note (mobile portrait) ────────────────────────────── */
+
+#rotate-note {
+  position: fixed;
+  bottom: 12px; left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-chrome);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--dim);
+  display: none;
+}
+
+@media (max-width: 640px) {
+  :root { --nav-h: 64px; }
+  #hud { display: none; }
+  #progress { right: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #grain { animation: none; }
+  #hint i { animation: none; }
+  .pip.live { animation: none; }
+}
